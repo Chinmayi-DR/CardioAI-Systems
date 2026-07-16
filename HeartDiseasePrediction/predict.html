@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block title %}Diagnostic Form - CardioAI Risk Assessment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <h1 class="h2 mb-2">Cardiovascular Risk Diagnostics</h1>
+                <p class="text-secondary max-w-lg mx-auto">
+                    Complete the clinical diagnostic profile below. Ensure all metrics are accurate to achieve optimal prediction results from the CardioAI classification engine.
+                </p>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Error:</strong> {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Prediction Form -->
+            <form id="predict-form" class="needs-validation" method="POST" action="{{ url_for('predict') }}" novalidate>
+                
+                <!-- Section 1: Demographics & Lifestyle -->
+                <div class="glass-card mb-4">
+                    <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                        <i class="bi bi-person-vcard-fill me-2"></i>1. Demographics & Lifestyle
+                    </h3>
+                    <div class="row g-3">
+                        <!-- Age -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="age">Age (18 - 90)</label>
+                            <input type="number" name="age" id="age" class="form-control-custom" min="18" max="90" required placeholder="e.g. 45">
+                            <div class="invalid-feedback">Age must be between 18 and 90.</div>
+                        </div>
+                        
+                        <!-- Sex -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="sex">Biological Sex</label>
+                            <select name="sex" id="sex" class="form-control-custom" required>
+                                <option value="" disabled selected>Select sex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="invalid-feedback">Please select biological sex.</div>
+                        </div>
+
+                        <!-- BMI -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="bmi">BMI (15.0 - 45.0)</label>
+                            <input type="number" name="bmi" id="bmi" class="form-control-custom" min="15" max="45" step="0.1" required placeholder="e.g. 24.5">
+                            <div class="invalid-feedback">BMI must be between 15.0 and 45.0.</div>
+                        </div>
+
+                        <!-- Smoker -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="smoker">Active Smoker</label>
+                            <select name="smoker" id="smoker" class="form-control-custom" required>
+                                <option value="" disabled selected>Select option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <div class="invalid-feedback">Please select smoking status.</div>
+                        </div>
+
+                        <!-- Diabetes -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="diabetes">Diagnosed Diabetes</label>
+                            <select name="diabetes" id="diabetes" class="form-control-custom" required>
+                                <option value="" disabled selected>Select option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <div class="invalid-feedback">Please select diabetes status.</div>
+                        </div>
+
+                        <!-- Family History -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="family_history">Family History of Heart Disease</label>
+                            <select name="family_history" id="family_history" class="form-control-custom" required>
+                                <option value="" disabled selected>Select option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <div class="invalid-feedback">Please specify family history status.</div>
+                        </div>
+
+                        <!-- Physical Activity -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="physical_activity">Physical Activity Level</label>
+                            <select name="physical_activity" id="physical_activity" class="form-control-custom" required>
+                                <option value="" disabled selected>Select level</option>
+                                <option value="Low">Low (Sedentary)</option>
+                                <option value="Moderate">Moderate (Active)</option>
+                                <option value="High">High (Very Active)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select activity level.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Cardiovascular Vitals -->
+                <div class="glass-card mb-4">
+                    <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>2. Cardiovascular Vitals
+                    </h3>
+                    <div class="row g-3">
+                        <!-- Resting BP -->
+                        <div class="col-md-6 col-lg-3 form-group-custom">
+                            <label class="form-label-custom" for="resting_bp">Resting Blood Pressure (mmHg)</label>
+                            <input type="number" name="resting_bp" id="resting_bp" class="form-control-custom" min="80" max="200" required placeholder="80 - 200">
+                            <div class="invalid-feedback">BP must be between 80 and 200 mmHg.</div>
+                        </div>
+
+                        <!-- Cholesterol -->
+                        <div class="col-md-6 col-lg-3 form-group-custom">
+                            <label class="form-label-custom" for="cholesterol">Serum Cholesterol (mg/dL)</label>
+                            <input type="number" name="cholesterol" id="cholesterol" class="form-control-custom" min="120" max="600" required placeholder="120 - 600">
+                            <div class="invalid-feedback">Cholesterol must be between 120 and 600 mg/dL.</div>
+                        </div>
+
+                        <!-- Max Heart Rate -->
+                        <div class="col-md-6 col-lg-3 form-group-custom">
+                            <label class="form-label-custom" for="max_heart_rate">Max Heart Rate Achieved (bpm)</label>
+                            <input type="number" name="max_heart_rate" id="max_heart_rate" class="form-control-custom" min="60" max="210" required placeholder="60 - 210">
+                            <div class="invalid-feedback">Heart rate must be between 60 and 210 bpm.</div>
+                        </div>
+
+                        <!-- Fasting Blood Sugar -->
+                        <div class="col-md-6 col-lg-3 form-group-custom">
+                            <label class="form-label-custom" for="fasting_blood_sugar">Fasting Blood Sugar &ge; 120 mg/dL</label>
+                            <select name="fasting_blood_sugar" id="fasting_blood_sugar" class="form-control-custom" required>
+                                <option value="" disabled selected>Select status</option>
+                                <option value="1">Yes (Elevated / Diabetic)</option>
+                                <option value="0">No (Normal)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select blood sugar status.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Cardiology Diagnostic Signals -->
+                <div class="glass-card mb-4">
+                    <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                        <i class="bi bi-activity me-2"></i>3. Cardiology Diagnostics
+                    </h3>
+                    <div class="row g-3">
+                        <!-- Chest Pain Type -->
+                        <div class="col-md-6 form-group-custom">
+                            <label class="form-label-custom" for="chest_pain_type">Chest Pain Type (Angina)</label>
+                            <select name="chest_pain_type" id="chest_pain_type" class="form-control-custom" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="Typical Angina">Typical Angina (Ischemic Chest Pain)</option>
+                                <option value="Atypical Angina">Atypical Angina (Non-ischemic Spasms)</option>
+                                <option value="Non-anginal Pain">Non-anginal Pain (Chest Discomfort)</option>
+                                <option value="Asymptomatic">Asymptomatic (No Chest Pain)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select chest pain type.</div>
+                        </div>
+
+                        <!-- Rest ECG -->
+                        <div class="col-md-6 form-group-custom">
+                            <label class="form-label-custom" for="rest_ecg">Resting Electrocardiographic Results</label>
+                            <select name="rest_ecg" id="rest_ecg" class="form-control-custom" required>
+                                <option value="" disabled selected>Select result</option>
+                                <option value="Normal">Normal</option>
+                                <option value="ST-T Abnormality">ST-T Wave Abnormality (T wave inversion)</option>
+                                <option value="Left Ventricular Hypertrophy">Left Ventricular Hypertrophy (Est. Romhilt-Estes)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select Rest ECG status.</div>
+                        </div>
+
+                        <!-- Exercise Induced Angina -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="exercise_induced_angina">Exercise Induced Angina</label>
+                            <select name="exercise_induced_angina" id="exercise_induced_angina" class="form-control-custom" required>
+                                <option value="" disabled selected>Select status</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <div class="invalid-feedback">Please select exercise angina status.</div>
+                        </div>
+
+                        <!-- Oldpeak -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="oldpeak">ST Depression (Oldpeak, 0.0 - 6.5)</label>
+                            <input type="number" name="oldpeak" id="oldpeak" class="form-control-custom" min="0" max="6.5" step="0.1" required placeholder="e.g. 1.2">
+                            <div class="invalid-feedback">Oldpeak must be between 0.0 and 6.5.</div>
+                        </div>
+
+                        <!-- Slope -->
+                        <div class="col-md-4 form-group-custom">
+                            <label class="form-label-custom" for="slope">ST Segment Slope during Peak Exercise</label>
+                            <select name="slope" id="slope" class="form-control-custom" required>
+                                <option value="" disabled selected>Select slope</option>
+                                <option value="Upsloping">Upsloping (Typical Fitness)</option>
+                                <option value="Flat">Flat (Potential Ischemia)</option>
+                                <option value="Downsloping">Downsloping (High Risk Sign)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select ST slope.</div>
+                        </div>
+
+                        <!-- Major Vessels -->
+                        <div class="col-md-6 form-group-custom">
+                            <label class="form-label-custom" for="major_vessels">Number of Major Vessels Colored by Fluoroscopy (0 - 4)</label>
+                            <select name="major_vessels" id="major_vessels" class="form-control-custom" required>
+                                <option value="" disabled selected>Select count</option>
+                                <option value="0">0 (Normal)</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4 (Severe Blockage)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select vessel count.</div>
+                        </div>
+
+                        <!-- Thal -->
+                        <div class="col-md-6 form-group-custom">
+                            <label class="form-label-custom" for="thal">Thalassemia / Thalassemia Scan (Thal)</label>
+                            <select name="thal" id="thal" class="form-control-custom" required>
+                                <option value="" disabled selected>Select scan status</option>
+                                <option value="Normal">Normal flow</option>
+                                <option value="Fixed Defect">Fixed Defect (No blood flow in part of heart)</option>
+                                <option value="Reversible Defect">Reversible Defect (Irregular flow during stress)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select Thal status.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button Area -->
+                <div class="text-center mt-5 mb-3">
+                    <button type="submit" class="btn btn-custom btn-primary-custom btn-lg px-5 py-3">
+                        <i class="bi bi-clipboard-pulse"></i> Analyze Risk Profile
+                    </button>
+                    <button type="reset" class="btn btn-custom btn-secondary-custom btn-lg ms-3">
+                        Reset Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

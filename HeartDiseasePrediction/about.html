@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}About CardioAI - Technology & Methodology{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="h2 mb-2">Methodology & AI Architecture</h1>
+        <p class="text-secondary max-w-lg mx-auto">
+            Learn about the scientific context of cardiovascular risks, our data generation pipeline, and the algorithmic mechanics of the CardioAI classifier.
+        </p>
+    </div>
+
+    <!-- Section 1: Heart Disease & Medical Context -->
+    <div class="row g-4 mb-5 align-items-center">
+        <div class="col-lg-6">
+            <div class="glass-card">
+                <h3 class="h4 mb-3 text-primary"><i class="bi bi-heart-pulse-fill text-danger me-2"></i>Cardiovascular Medicine</h3>
+                <p class="text-secondary">
+                    Cardiovascular disease (CVD) represents a class of disorders involving the heart or blood vessels. According to the World Health Organization (WHO), CVDs are the leading cause of death globally, taking an estimated 17.9 million lives each year.
+                </p>
+                <p class="text-secondary">
+                    Clinical attributes such as high blood pressure (hypertension), serum cholesterol, diabetes, obesity (indicated by high BMI), and lifestyle habits like smoking and sedentary routines damage vessel lining. This increases the likelihood of arterial plaque build-up, resulting in ischemic symptoms (Typical/Atypical Angina) or acute cardiac events.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="glass-card">
+                <h3 class="h4 mb-3 text-primary"><i class="bi bi-cpu-fill me-2"></i>Role of Artificial Intelligence</h3>
+                <p class="text-secondary">
+                    Traditional risk assessment tools (like the Framingham Risk Score) rely on simple point calculators. Machine learning classifiers can handle complex, high-dimensional inputs containing both linear interactions and non-linear patterns.
+                </p>
+                <p class="text-secondary">
+                    By evaluating 18 distinct physiological variables simultaneously, CardioAI identifies hidden risk signatures. It quantifies the probability of coronary blockages (measured via fluoroscopy vessel coloration and thal scans) to support clinical decision-making.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Algorithmic Mechanics -->
+    <div class="glass-card mb-5">
+        <h3 class="h4 mb-4 text-primary border-bottom pb-2">
+            <i class="bi bi-gear-wide-connected me-2"></i>Classifiers Implemented
+        </h3>
+        <div class="row g-4">
+            <!-- Logistic Regression -->
+            <div class="col-md-6 col-lg-3">
+                <h5 class="h6 text-uppercase text-primary font-weight-bold">Logistic Regression</h5>
+                <p class="text-secondary small">
+                    A statistical baseline that models the probability of a binary outcome using a logistic sigmoid function. Highly interpretable; coefficients reflect the direction and weight of each health risk factor.
+                </p>
+            </div>
+            <!-- Decision Tree -->
+            <div class="col-md-6 col-lg-3">
+                <h5 class="h6 text-uppercase text-primary font-weight-bold">Decision Tree</h5>
+                <p class="text-secondary small">
+                    Classifies patient profiles by splitting the feature space into hierarchical branches based on value thresholds. Simple to trace but prone to overfitting without depth regularizations.
+                </p>
+            </div>
+            <!-- Random Forest -->
+            <div class="col-md-6 col-lg-3">
+                <h5 class="h6 text-uppercase text-primary font-weight-bold">Random Forest</h5>
+                <p class="text-secondary small">
+                    An ensemble model that aggregates predictions from multiple decision trees trained on random subsets of the data (bagging). Highly robust against noise and outliers.
+                </p>
+            </div>
+            <!-- KNN -->
+            <div class="col-md-6 col-lg-3">
+                <h5 class="h6 text-uppercase text-primary font-weight-bold">K-Nearest Neighbors</h5>
+                <p class="text-secondary small">
+                    An instance-based classifier that assigns risk based on distance metrics in a multi-dimensional space. Evaluates how similar a patient's vitals are to historical patient profiles.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Data Synthesis & Pipeline Workflow -->
+    <div class="row g-4">
+        <!-- Dataset Generation -->
+        <div class="col-md-6">
+            <div class="glass-card h-100">
+                <h3 class="h4 mb-3 text-primary"><i class="bi bi-file-earmark-bar-graph me-2"></i>Synthetic Data Engine</h3>
+                <p class="text-secondary small">
+                    To comply with healthcare data privacy standards (HIPAA) without sacrificing modeling quality, CardioAI features a custom data generator. It simulates a 10,000-patient cohort matching medical distributions:
+                </p>
+                <ul class="list-unstyled text-secondary small">
+                    <li class="mb-2"><i class="bi bi-dot me-1 text-primary"></i><strong>Distributions:</strong> Ages (18-90), Blood Pressures (80-200), and Serum Cholesterol (120-600) are generated realistically.</li>
+                    <li class="mb-2"><i class="bi bi-dot me-1 text-primary"></i><strong>Medical Logic:</strong> Risk weights are applied to clinical factors, calculating an overall cardiovascular probability.</li>
+                    <li class="mb-2"><i class="bi bi-dot me-1 text-primary"></i><strong>Stochastic Noise:</strong> Minor Gaussian variations are added to represent patient individuality, creating a realistic classification boundary.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Prediction Workflow -->
+        <div class="col-md-6">
+            <div class="glass-card h-100">
+                <h3 class="h4 mb-3 text-primary"><i class="bi bi-arrow-right-circle me-2"></i>Clinical Pipeline Workflow</h3>
+                <p class="text-secondary small">
+                    When you click "Analyze Risk Profile," the patient data flows through the following pipeline:
+                </p>
+                <ol class="text-secondary small ps-3">
+                    <li class="mb-2"><strong>Data Capture:</strong> 18 clinical attributes are collected from the responsive form.</li>
+                    <li class="mb-2"><strong>One-Hot Encoding:</strong> Categorical arrays (e.g. pain types, thal scans) are converted to flat numeric arrays using the saved `encoder.pkl`.</li>
+                    <li class="mb-2"><strong>Standard Scaling:</strong> Numerical columns are scaled to standard normal variance using the saved `scaler.pkl`.</li>
+                    <li class="mb-2"><strong>Classification:</strong> Preprocessed features are fed into the active model (`model.pkl`) to calculate risk probabilities.</li>
+                    <li class="mb-2"><strong>Report Compilation:</strong> Risk percentages, confidence metrics, and lifestyle recommendations are rendered.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Model Performance - CardioAI Analytics{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="h2 mb-2">Machine Learning Performance Scorecard</h1>
+        <p class="text-secondary max-w-lg mx-auto">
+            Review the training evaluation results. Four different classification algorithms were trained, cross-validated, and compared to select the best predictive model.
+        </p>
+    </div>
+
+    <!-- Best Performing Model Highlight Alert -->
+    <div class="alert alert-success border-0 rounded-4 shadow-sm p-4 mb-5 d-flex flex-column flex-md-row align-items-center justify-content-between">
+        <div class="mb-3 mb-md-0 d-flex align-items-center gap-3">
+            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                <i class="bi bi-cpu-fill"></i>
+            </div>
+            <div>
+                <h4 class="h5 mb-1 text-success font-weight-bold">Selected Prediction Model: {{ metrics.best_model_name }}</h4>
+                <p class="mb-0 text-secondary small">
+                    This algorithm demonstrated the optimal balance between sensitivity (Recall) and precision, achieving the highest overall F1 Score.
+                </p>
+            </div>
+        </div>
+        <span class="badge bg-success px-4 py-2 h5 font-weight-bold mb-0">
+            F1 Score: {{ "%.4f"|format(metrics.results[metrics.best_model_name]['F1 Score']) }}
+        </span>
+    </div>
+
+    <!-- Models Comparison Table -->
+    <div class="glass-card mb-5">
+        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+            <i class="bi bi-trophy-fill me-2"></i>Algorithm Comparison Matrix
+        </h3>
+        <div class="table-responsive">
+            <table class="table table-custom align-middle text-center">
+                <thead>
+                    <tr>
+                        <th class="text-start">Algorithm Classifier</th>
+                        <th>Accuracy</th>
+                        <th>Precision (PPV)</th>
+                        <th>Recall (Sensitivity)</th>
+                        <th>F1 Score</th>
+                        <th>ROC AUC</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, scores in metrics.results.items() %}
+                    <tr {% if name == metrics.best_model_name %}class="table-active font-weight-bold border-primary"{% endif %}>
+                        <td class="text-start">
+                            <strong>{{ name }}</strong>
+                        </td>
+                        <td>{{ "%.2f"|format(scores.Accuracy * 100) }}%</td>
+                        <td>{{ "%.2f"|format(scores.Precision * 100) }}%</td>
+                        <td>{{ "%.2f"|format(scores.Recall * 100) }}%</td>
+                        <td>{{ "%.4f"|format(scores['F1 Score']) }}</td>
+                        <td>{{ "%.4f"|format(scores['ROC AUC']) }}</td>
+                        <td>
+                            {% if name == metrics.best_model_name %}
+                            <span class="badge bg-primary px-3 py-1 rounded-pill">Active (Best)</span>
+                            {% else %}
+                            <span class="badge bg-secondary opacity-50 px-3 py-1 rounded-pill">Trained</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ROC Curve and Confusion Matrix Layout -->
+    <div class="row g-4 mb-5">
+        <!-- ROC Curve -->
+        <div class="col-md-6">
+            <div class="glass-card h-100">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-graph-up-arrow me-2"></i>ROC Curves Comparison
+                </h3>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/roc_curve.png') }}" class="img-fluid rounded-3 border" alt="ROC Curves">
+                </div>
+                <p class="text-secondary small mt-3 mb-0">
+                    The Receiver Operating Characteristic curve measures performance across all threshold settings. A higher Area Under the Curve (AUC closer to 1.0) represents superior capability in separating high-risk and low-risk patients.
+                </p>
+            </div>
+        </div>
+
+        <!-- Confusion Matrix -->
+        <div class="col-md-6">
+            <div class="glass-card h-100">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-grid-1x2-fill me-2"></i>Confusion Matrix (Active Model)
+                </h3>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}" class="img-fluid rounded-3 border" alt="Confusion Matrix">
+                </div>
+                <p class="text-secondary small mt-3 mb-0">
+                    The confusion matrix shows correct vs. incorrect predictions for the active model: 
+                    True Negatives (top-left), False Positives (top-right), False Negatives (bottom-left), and True Positives (bottom-right). Low False Negatives are critical in healthcare.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Importance Layout -->
+    <div class="glass-card">
+        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+            <i class="bi bi-award-fill me-2"></i>Feature Contribution Profile
+        </h3>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-7 text-center">
+                <img src="{{ url_for('static', filename='images/feature_importance.png') }}" class="img-fluid rounded-3 border" alt="Feature Importance">
+            </div>
+            <div class="col-lg-5">
+                <h4 class="h5 mb-3 text-secondary">Understanding Model Coefficients</h4>
+                <p class="text-secondary">
+                    This chart highlights which patient markers have the largest influence on the CardioAI model's final risk assessment.
+                </p>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3 d-flex align-items-start small">
+                        <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                        <span><strong>Positive Coefficients (Logistic Regression) / High Importance (Random Forest):</strong> Indicate attributes that directly increase the predicted risk score (e.g. higher oldpeak ST depression, higher cholesterol, active smoker, and age).</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start small">
+                        <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
+                        <span><strong>Negative Coefficients:</strong> Represent protective attributes that decrease the risk prediction score (e.g. high physical activity).</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

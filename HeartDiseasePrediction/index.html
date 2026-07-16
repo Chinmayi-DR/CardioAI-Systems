@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}CardioAI - Heart Disease Prediction & Analysis System{% endblock %}
+
+{% block content %}
+<!-- Large Interactive Hero Section -->
+<section class="hero-section text-center text-md-start">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge bg-danger mb-3 px-3 py-2 text-uppercase font-weight-bold" style="letter-spacing: 0.05em;">Clinical Diagnostic Support</span>
+                <h1 class="hero-title">CardioAI Systems</h1>
+                <h2 class="h3 fw-light mb-4 text-white-50">Predict Heart Disease Risk with Machine Learning</h2>
+                <p class="hero-subtitle">
+                    An advanced healthcare intelligence platform that uses classification algorithms to analyze patient clinical markers and predict cardiovascular disease risks with high clinical accuracy.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-md-start mt-4">
+                    <a href="{{ url_for('predict') }}" class="btn btn-custom btn-primary-custom btn-lg">
+                        <i class="bi bi-heart-pulse-fill"></i> Perform Diagnostic Risk Assessment
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-custom btn-secondary-custom btn-lg border-white text-white">
+                        Learn How It Works
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-heart-container">
+                    <div class="hero-pulse-ring"></div>
+                    <div class="hero-pulse-ring"></div>
+                    <i class="bi bi-heart-pulse-fill hero-heart"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Overview and Info Cards -->
+<section class="py-5 my-3">
+    <div class="container">
+        <div class="text-center mb-5 max-w-2xl mx-auto">
+            <h2 class="h1 mb-3">Cardiovascular Risk Intelligence</h2>
+            <p class="text-secondary lead">
+                Cardiovascular diseases are the leading cause of death globally. Early identification of risk factors through predictive modeling allows patients and clinics to take preventative measures before serious heart conditions develop.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Card 1: What is Heart Disease -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card hover-drift">
+                    <div class="icon-box">
+                        <i class="bi bi-shield-heart-fill"></i>
+                    </div>
+                    <h4>Heart Disease</h4>
+                    <p class="text-secondary mb-0">
+                        Refers to various conditions affecting heart structure and function, most commonly coronary artery disease which can block blood flow and lead to cardiac arrest.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: Symptoms -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card hover-drift">
+                    <div class="icon-box" style="background-color: rgba(217, 4, 41, 0.1); color: var(--accent-red);">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <h4>Symptoms</h4>
+                    <p class="text-secondary mb-0">
+                        Key indicators include acute chest pain (angina), shortness of breath, irregular heartbeat patterns, exhaustion, and pain or numbness in the arms or jaw.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: Risk Factors -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card hover-drift">
+                    <div class="icon-box" style="background-color: rgba(43, 147, 72, 0.1); color: var(--accent-green);">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h4>Risk Factors</h4>
+                    <p class="text-secondary mb-0">
+                        Includes non-modifiable risks like age and genetics, combined with lifestyle factors like smoking, high blood pressure, cholesterol, obesity, and diabetes.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 4: Machine Learning -->
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card hover-drift">
+                    <div class="icon-box" style="background-color: rgba(15, 76, 129, 0.1); color: var(--accent-blue);">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <h4>Predictive AI</h4>
+                    <p class="text-secondary mb-0">
+                        Our model evaluates multiple clinical markers simultaneously, detecting complex nonlinear correlations to accurately classify patient risk parameters.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-5" style="background-color: rgba(var(--accent-blue-rgb), 0.03); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container text-center py-4">
+        <h3 class="h2 mb-3">Ready to Assess Patient Cardiovascular Risk?</h3>
+        <p class="text-secondary mb-4 max-w-xl mx-auto">
+            Input patient clinical metrics like cholesterol, blood pressure, ECG status, and lifestyle variables to calculate a diagnostic risk classification using our highest-performing machine learning model.
+        </p>
+        <a href="{{ url_for('predict') }}" class="btn btn-custom btn-primary-custom btn-lg">
+            <i class="bi bi-activity"></i> Start Prediction Form
+        </a>
+    </div>
+</section>
+{% endblock %}

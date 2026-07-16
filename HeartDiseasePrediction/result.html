@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Diagnostic Result - CardioAI Assessment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-9">
+            
+            <!-- Result Cards Wrapper -->
+            <div class="glass-card {% if risk_class == 1 %}result-card-high-risk{% else %}result-card-low-risk{% endif %} shadow-lg mb-4">
+                
+                <div class="text-center mb-5">
+                    <span class="badge badge-risk {% if risk_class == 1 %}badge-high-risk{% else %}badge-low-risk{% endif %} mb-3">
+                        {% if risk_class == 1 %}
+                            <i class="bi bi-heart-pulse-fill me-2"></i>HIGH RISK DETECTED
+                        {% else %}
+                            <i class="bi bi-check-circle-fill me-2"></i>LOW RISK DETECTED
+                        {% endif %}
+                    </span>
+                    
+                    <h1 class="h2">Cardiovascular Risk Scorecard</h1>
+                    <p class="text-secondary">
+                        Patient profile analyzed using the optimized diagnostic classification algorithm.
+                    </p>
+                </div>
+
+                <div class="row g-4 align-items-center mb-5">
+                    <!-- Column 1: Animated SVG Risk Gauge -->
+                    <div class="col-md-6 text-center border-end">
+                        <div class="risk-gauge-container">
+                            <svg class="risk-gauge-svg" width="180" height="180" viewBox="0 0 180 180">
+                                <circle class="gauge-bg" cx="90" cy="90" r="75"></circle>
+                                <circle id="risk-gauge-fill" class="gauge-fill {% if risk_class == 1 %}gauge-fill-high{% else %}gauge-fill-low{% endif %}" cx="90" cy="90" r="75" stroke-dasharray="471.2" stroke-dashoffset="471.2"></circle>
+                            </svg>
+                            <div class="risk-gauge-text">
+                                <div class="risk-percentage">{{ risk_probability }}%</div>
+                                <div class="risk-label">Risk Probability</div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="text-muted d-block small">Model Classification Confidence</span>
+                            <span class="h5 font-weight-bold text-primary">{{ confidence }}%</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Clinical Input Profile -->
+                    <div class="col-md-6">
+                        <h4 class="h6 text-uppercase text-secondary mb-3">Diagnostic Markers Checked</h4>
+                        <div class="row g-2 small">
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Age / Sex:</span>
+                                <strong>{{ input_data.age }} yrs / {{ input_data.sex }}</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">BMI / Activity:</span>
+                                <strong>{{ input_data.bmi }} / {{ input_data.physical_activity }}</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Blood Pressure:</span>
+                                <strong>{{ input_data.resting_bp }} mmHg</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Serum Cholesterol:</span>
+                                <strong>{{ input_data.cholesterol }} mg/dL</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Max Heart Rate:</span>
+                                <strong>{{ input_data.max_heart_rate }} bpm</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Chest Pain Type:</span>
+                                <strong>{{ input_data.chest_pain_type }}</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">ST Depression (Oldpeak):</span>
+                                <strong>{{ input_data.oldpeak }}</strong>
+                            </div>
+                            <div class="col-6 mb-1">
+                                <span class="text-muted d-block">Fluoroscopy Vessels:</span>
+                                <strong>{{ input_data.major_vessels }} blocked</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guidance & Recommendations -->
+                <div class="row g-4">
+                    <!-- Lifestyle Recommendations -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4" style="background-color: rgba(var(--accent-blue-rgb), 0.03); border: 1px solid var(--border-color); height: 100%;">
+                            <h5 class="h6 text-primary mb-3">
+                                <i class="bi bi-heart-fill text-danger me-2"></i>Cardiovascular Care Guidelines
+                            </h5>
+                            <ul class="list-unstyled mb-0 small">
+                                {% for item in lifestyle_advice %}
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-chevron-right text-primary me-2 mt-1"></i>
+                                    <span>{{ item }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Medical Precautions -->
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4" style="background-color: rgba(var(--accent-blue-rgb), 0.03); border: 1px solid var(--border-color); height: 100%;">
+                            <h5 class="h6 text-primary mb-3">
+                                <i class="bi bi-shield-fill-check text-success me-2"></i>Medical Precautions
+                            </h5>
+                            <ul class="list-unstyled mb-0 small">
+                                {% for item in precautions %}
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="bi bi-exclamation-circle-fill {% if risk_class == 1 %}text-danger{% else %}text-success{% endif %} me-2 mt-1"></i>
+                                    <span>{{ item }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="text-center mt-5">
+                    <a href="{{ url_for('predict') }}" class="btn btn-custom btn-primary-custom btn-lg">
+                        <i class="bi bi-arrow-left-circle"></i> Perform Another Diagnosis
+                    </a>
+                    <a href="{{ url_for('home') }}" class="btn btn-custom btn-secondary-custom btn-lg ms-3">
+                        <i class="bi bi-house-door-fill"></i> Home Dashboard
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Animate the risk gauge SVG circle
+        const riskProbability = {{ risk_probability }};
+        const circle = document.getElementById('risk-gauge-fill');
+        if (circle) {
+            const circumference = 471.2;
+            const offset = circumference * (1 - riskProbability / 100);
+            
+            // Set dashoffset with delay to allow transition after render
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 200);
+        }
+        
+        // Notify user about prediction result using our toast system
+        const riskClass = {{ risk_class }};
+        if (riskClass === 1) {
+            window.showToast("Analysis complete: High cardiovascular risk warning triggered.", "warning");
+        } else {
+            window.showToast("Analysis complete: Patient cardiovascular risk categorized as Low.", "success");
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{
+    "shape": [
+        10000,
+        19
+    ],
+    "columns": [
+        "age",
+        "sex",
+        "chest_pain_type",
+        "resting_bp",
+        "cholesterol",
+        "fasting_blood_sugar",
+        "rest_ecg",
+        "max_heart_rate",
+        "exercise_induced_angina",
+        "oldpeak",
+        "slope",
+        "major_vessels",
+        "thal",
+        "smoker",
+        "diabetes",
+        "bmi",
+        "family_history",
+        "physical_activity",
+        "heart_disease"
+    ],
+    "missing_values": 0,
+    "duplicates_removed": 0,
+    "heart_disease_counts": {
+        "1": 5084,
+        "0": 4916
+    },
+    "sex_counts": {
+        "Male": 5170,
+        "Female": 4830
+    },
+    "smoker_counts": {
+        "No": 6954,
+        "Yes": 3046
+    },
+    "diabetes_counts": {
+        "No": 8470,
+        "Yes": 1530
+    },
+    "family_history_counts": {
+        "No": 7514,
+        "Yes": 2486
+    },
+    "summary_statistics": {
+        "age": {
+            "count": 10000.0,
+            "mean": 54.0188,
+            "std": 21.051421871129744,
+            "min": 18.0,
+            "25%": 36.0,
+            "50%": 54.0,
+            "75%": 72.0,
+            "max": 90.0
+        },
+        "resting_bp": {
+            "count": 10000.0,
+            "mean": 140.1549,
+            "std": 35.02909376120046,
+            "min": 80.0,
+            "25%": 110.0,
+            "50%": 140.0,
+            "75%": 171.0,
+            "max": 200.0
+        },
+        "cholesterol": {
+            "count": 10000.0,
+            "mean": 361.3576,
+            "std": 138.45647237205696,
+            "min": 120.0,
+            "25%": 241.0,
+            "50%": 363.0,
+            "75%": 482.0,
+            "max": 600.0
+        },
+        "fasting_blood_sugar": {
+            "count": 10000.0,
+            "mean": 0.1547,
+            "std": 0.36163654143187723,
+            "min": 0.0,
+            "25%": 0.0,
+            "50%": 0.0,
+            "75%": 0.0,
+            "max": 1.0
+        },
+        "max_heart_rate": {
+            "count": 10000.0,
+            "mean": 134.9267,
+            "std": 43.891064804433334,
+            "min": 60.0,
+            "25%": 96.0,
+            "50%": 135.0,
+            "75%": 173.0,
+            "max": 210.0
+        },
+        "oldpeak": {
+            "count": 10000.0,
+            "mean": 3.2610900000000003,
+            "std": 1.866081787603052,
+            "min": 0.0,
+            "25%": 1.7,
+            "50%": 3.3,
+            "75%": 4.9,
+            "max": 6.5
+        },
+        "major_vessels": {
+            "count": 10000.0,
+            "mean": 0.8876,
+            "std": 1.1919346923515077,
+            "min": 0.0,
+            "25%": 0.0,
+            "50%": 0.0,
+            "75%": 1.0,
+            "max": 4.0
+        },
+        "bmi": {
+            "count": 10000.0,
+            "mean": 29.961989999999997,
+            "std": 8.615422728501432,
+            "min": 15.0,
+            "25%": 22.6,
+            "50%": 29.9,
+            "75%": 37.5,
+            "max": 45.0
+        },
+        "heart_disease": {
+            "count": 10000.0,
+            "mean": 0.5084,
+            "std": 0.49995443336722634,
+            "min": 0.0,
+            "25%": 0.0,
+            "50%": 1.0,
+            "75%": 1.0,
+            "max": 1.0
+        }
+    }
+}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - CardioAI Systems{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="h2 mb-2">Connect with CardioAI Research</h1>
+        <p class="text-secondary max-w-lg mx-auto">
+            Have questions about our cardiovascular predictive models or interest in clinical pilot partnerships? Reach out to our medical AI engineering team.
+        </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Contact Details -->
+        <div class="col-lg-4">
+            <div class="glass-card mb-4">
+                <h4 class="h5 mb-4 text-primary"><i class="bi bi-building me-2"></i>Research Headquarters</h4>
+                <p class="text-secondary small mb-4">
+                    Our interdisciplinary team of cardiologists, data scientists, and clinical researchers operates out of our medical technology campus.
+                </p>
+                <div class="d-flex align-items-start gap-3 mb-3 small">
+                    <i class="bi bi-geo-alt-fill text-danger fs-5 mt-1"></i>
+                    <div>
+                        <strong>CardioAI Research Center</strong><br>
+                        100 Medical Plaza, Suite 400<br>
+                        San Francisco, CA 94143
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3 mb-3 small">
+                    <i class="bi bi-telephone-fill text-success fs-5"></i>
+                    <div>
+                        <strong>Inquiries:</strong> +1 (415) 555-0199
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3 small">
+                    <i class="bi bi-envelope-fill text-primary fs-5"></i>
+                    <div>
+                        <strong>Support:</strong> research@cardioai.org
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card">
+                <h4 class="h5 mb-3 text-primary"><i class="bi bi-clock-fill me-2"></i>Consultation Hours</h4>
+                <p class="text-secondary small mb-0">
+                    Monday &ndash; Friday: 9:00 AM &ndash; 5:00 PM PST<br>
+                    Saturday &ndash; Sunday: Closed for research trials
+                </p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-6">
+            <div class="glass-card">
+                <h4 class="h5 mb-4 text-primary"><i class="bi bi-envelope-paper-fill me-2"></i>Submit an Inquiry</h4>
+                
+                {% if success_msg %}
+                <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>{{ success_msg }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+
+                <form id="contact-form" class="needs-validation" method="POST" action="{{ url_for('contact') }}" novalidate>
+                    <!-- Name -->
+                    <div class="form-group-custom">
+                        <label class="form-label-custom" for="name">Full Name</label>
+                        <input type="text" name="name" id="name" class="form-control-custom" required placeholder="e.g. Dr. John Doe">
+                        <div class="invalid-feedback">Please enter your full name.</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group-custom">
+                        <label class="form-label-custom" for="email">Professional Email Address</label>
+                        <input type="email" name="email" id="email" class="form-control-custom" required placeholder="name@institution.org">
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="form-group-custom">
+                        <label class="form-label-custom" for="subject">Subject</label>
+                        <select name="subject" id="subject" class="form-control-custom" required>
+                            <option value="" disabled selected>Select subject</option>
+                            <option value="Pilot Partnership">Clinical Pilot Partnership</option>
+                            <option value="Model Research">Model Research Inquiry</option>
+                            <option value="Technical Support">Technical Integration Support</option>
+                            <option value="Other">General Feedback</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a subject.</div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="form-group-custom">
+                        <label class="form-label-custom" for="message">Detailed Message</label>
+                        <textarea name="message" id="message" rows="5" class="form-control-custom" required placeholder="State details here..."></textarea>
+                        <div class="invalid-feedback">Please write a message.</div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-custom btn-primary-custom">
+                            <i class="bi bi-send-fill"></i> Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Form visual validation triggers
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                if (!contactForm.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    contactForm.classList.add('was-validated');
+                    window.showToast("Please fill in all inquiry fields correctly.", "warning");
+                }
+            });
+        }
+
+        // Show toast notification for success on post redirect
+        {% if success_msg %}
+            window.showToast("Inquiry submitted successfully.", "success");
+        {% endif %}
+    });
+</script>
+{% endblock %}

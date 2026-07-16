@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Dataset Insights - CardioAI Clinical Data Analysis{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="h2 mb-2">Cardiovascular Dataset Insights</h1>
+        <p class="text-secondary max-w-lg mx-auto">
+            Explore the diagnostic properties, correlations, and feature distributions of the generated medical cohort dataset containing 10,000 synthetic patient records.
+        </p>
+    </div>
+
+    <!-- Quick Stats Summary Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="glass-card text-center p-3">
+                <span class="text-muted d-block small mb-1 text-uppercase">Cohort Size</span>
+                <span class="h3 font-weight-bold text-primary">{{ stats.shape[0] }}</span>
+                <span class="text-muted d-block small mt-1">Patient records</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card text-center p-3">
+                <span class="text-muted d-block small mb-1 text-uppercase">Feature Count</span>
+                <span class="h3 font-weight-bold text-primary">{{ stats.shape[1] }}</span>
+                <span class="text-muted d-block small mt-1">Clinical attributes</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card text-center p-3">
+                <span class="text-muted d-block small mb-1 text-uppercase">Missing Values</span>
+                <span class="h3 font-weight-bold {% if stats.missing_values > 0 %}text-danger{% else %}text-success{% endif %}">
+                    {{ stats.missing_values }}
+                </span>
+                <span class="text-muted d-block small mt-1">Null columns handled</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card text-center p-3">
+                <span class="text-muted d-block small mb-1 text-uppercase">Duplicates Removed</span>
+                <span class="h3 font-weight-bold text-success">{{ stats.duplicates_removed }}</span>
+                <span class="text-muted d-block small mt-1">Unique records clean</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualizations Layout -->
+    <div class="row g-4 mb-5">
+        <!-- Correlation Heatmap -->
+        <div class="col-xl-7">
+            <div class="glass-card h-100">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-grid-3x3-gap-fill me-2"></i>Feature Correlation Matrix
+                </h3>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/correlation_heatmap.png') }}" class="img-fluid rounded-3 border" alt="Correlation Heatmap">
+                </div>
+                <p class="text-secondary small mt-3 mb-0">
+                    This heatmap represents linear relationships between clinical numeric parameters. Values close to +1.0 or -1.0 indicate strong direct or inverse correlations respectively. Note the positive correlation of age, ST depression (oldpeak), resting blood pressure, and major vessels with heart disease risk.
+                </p>
+            </div>
+        </div>
+
+        <!-- Demographics Breakdown -->
+        <div class="col-xl-5">
+            <div class="glass-card h-100">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-pie-chart-fill me-2"></i>Demographics & Risk Cohorts
+                </h3>
+                
+                <div class="mb-4">
+                    <h6 class="text-secondary font-weight-bold mb-2">Biological Sex Balance</h6>
+                    <div class="progress mb-2" style="height: 20px;">
+                        {% set total_sex = stats.sex_counts.Male + stats.sex_counts.Female %}
+                        {% set male_pct = (stats.sex_counts.Male / total_sex * 100)|round(1) %}
+                        {% set female_pct = (stats.sex_counts.Female / total_sex * 100)|round(1) %}
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ male_pct }}%;" aria-valuenow="{{ male_pct }}" aria-valuemin="0" aria-valuemax="100">Male ({{ male_pct }}%)</div>
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ female_pct }}%;" aria-valuenow="{{ female_pct }}" aria-valuemin="0" aria-valuemax="100">Female ({{ female_pct }}%)</div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-secondary font-weight-bold mb-2">Class Variable Distribution (Heart Disease)</h6>
+                    <div class="progress mb-2" style="height: 20px;">
+                        {% set total_hd = stats.heart_disease_counts['1'] + stats.heart_disease_counts['0'] %}
+                        {% set positive_pct = (stats.heart_disease_counts['1'] / total_hd * 100)|round(1) %}
+                        {% set negative_pct = (stats.heart_disease_counts['0'] / total_hd * 100)|round(1) %}
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ positive_pct }}%;" aria-valuenow="{{ positive_pct }}" aria-valuemin="0" aria-valuemax="100">High Risk ({{ positive_pct }}%)</div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ negative_pct }}%;" aria-valuenow="{{ negative_pct }}" aria-valuemin="0" aria-valuemax="100">Low Risk ({{ negative_pct }}%)</div>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-secondary opacity-25">
+
+                <div class="row text-center g-3">
+                    <div class="col-4">
+                        <span class="text-muted d-block small">Active Smokers</span>
+                        <strong class="h5">{{ stats.smoker_counts.Yes }}</strong>
+                    </div>
+                    <div class="col-4">
+                        <span class="text-muted d-block small">Diabetic Patients</span>
+                        <strong class="h5">{{ stats.diabetes_counts.Yes }}</strong>
+                    </div>
+                    <div class="col-4">
+                        <span class="text-muted d-block small">Family History</span>
+                        <strong class="h5">{{ stats.family_history_counts.Yes }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distribution Graphs Section -->
+    <div class="row g-4 mb-5">
+        <!-- Age Distribution -->
+        <div class="col-md-6">
+            <div class="glass-card">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-bar-chart-line-fill me-2"></i>Age Distribution by Risk Category
+                </h3>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/age_distribution.png') }}" class="img-fluid rounded-3 border" alt="Age Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Chest Pain Risk -->
+        <div class="col-md-6">
+            <div class="glass-card">
+                <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+                    <i class="bi bi-heart-fill text-danger me-2"></i>Risk by Chest Pain Type
+                </h3>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/chest_pain_risk.png') }}" class="img-fluid rounded-3 border" alt="Chest Pain Risk">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics Table -->
+    <div class="glass-card">
+        <h3 class="h5 mb-4 text-primary border-bottom pb-2">
+            <i class="bi bi-table me-2"></i>Cohort Numeric Metrics Summary (Summary Statistics)
+        </h3>
+        <div class="table-responsive">
+            <table class="table table-custom align-middle">
+                <thead>
+                    <tr>
+                        <th>Metric Variable</th>
+                        <th>Record Count</th>
+                        <th>Mean Value</th>
+                        <th>Std. Deviation</th>
+                        <th>Min</th>
+                        <th>25%</th>
+                        <th>Median (50%)</th>
+                        <th>75%</th>
+                        <th>Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for col, metrics in stats.summary_statistics.items() %}
+                    <tr>
+                        <td><strong>{{ col }}</strong></td>
+                        <td>{{ metrics.count|int }}</td>
+                        <td>{{ "%.2f"|format(metrics.mean) }}</td>
+                        <td>{{ "%.2f"|format(metrics.std) }}</td>
+                        <td>{{ "%.2f"|format(metrics.min) }}</td>
+                        <td>{{ "%.2f"|format(metrics['25%']) }}</td>
+                        <td>{{ "%.2f"|format(metrics['50%']) }}</td>
+                        <td>{{ "%.2f"|format(metrics['75%']) }}</td>
+                        <td>{{ "%.2f"|format(metrics.max) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
